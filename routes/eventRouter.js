@@ -1,6 +1,7 @@
 var express = require('express');
 var Event = require('../models/event.js');
-
+var schedule = require('node-schedule');
+var botHelper = require('../config/botHelper.js');
 var router = express.Router();
 
 router.get('/event', function (req, res) {
@@ -19,29 +20,24 @@ router.post('/createEvent', function (req, res) {
       parseInt(req.body.startHour),
       parseInt(req.body.startMinute));
 
-    console.log(parseInt(req.body.startYear));
-
     var endDate = new Date(parseInt(req.body.endYear),
-      parseInt(req.body.endMonth),
+      parseInt(req.body.endMonth) - 1,
       parseInt(req.body.endDay),
       parseInt(req.body.endHour),
       parseInt(req.body.endMinute));
+
+    let pseudoStart = new Date(Date.now() + 4000);
 
     var newEvent = new Event({
       creator: req.user,
       title: req.body.title,
       description: req.body.description,
       location: req.body.location,
-      timeStart: startDate,
+      timeStart: pseudoStart, // TODO: be sure to change this to the actual time.
       timeEnd: endDate 
     });
-
-    var schedule = require('node-schedule');
-    var asdf = newEvent.timeStart;
-    console.log("Job scheduled.");
-    schedule.scheduleJob(asdf, function() {
-      console.log("ayy lmao");
-    });
+    
+    scheduleEvent(newEvent);
 
     newEvent.save(function (err, evnt) {
       if (err) {
@@ -52,31 +48,16 @@ router.post('/createEvent', function (req, res) {
         res.redirect('/dashboard'); // then maybe do the session thing?
       }
     });
-
-
-
-
-
-    // we'll put this here for now- we'll make this more robust later.
   } else {
     // throw error???
   }
 });
 
-var createDateString = function (year, month, day, hour, minute) {
-  if (month.length === 1) {
-    month = '0' + month;
-  }
-  if (day.length === 1) {
-    day = '0' + day;
-  }
-  if (hour.length === 1) {
-    hour = '0' + hour;
-  }
-  if (minute.length === 1) {
-    minute = '0' + minute;
-  }
-  return year + "-" + month + "-" + day + "T" + hour + ":" + minute + ":00";
-}
+var scheduleEvent = function (event) {
+  schedule.scheduleJob(event.timeStart, function() {
+    console.log('calling message...');
+    botHelper(event);
+  });
+};
 
 module.exports = router;

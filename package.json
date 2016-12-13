@@ -24,6 +24,7 @@
     "bcrypt-nodejs" : "latest",
     "node-uuid": "^1.4.3",
     "node-schedule": "~1.2.0",
+    "request": "latest",
     "morgan": "~1.0.0"
   },
   "devDependencies": {
