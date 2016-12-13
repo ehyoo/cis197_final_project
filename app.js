@@ -3,6 +3,7 @@ var express      = require('express');
 var app          = express();
 var port         = process.env.port || 3000;
 var mongoose     = require('mongoose');
+var users = require('./routes/userRouter.js');
 /* Sessions Setup */
 var passport     = require('passport');
 var flash        = require('connect-flash');
@@ -32,8 +33,7 @@ require('./config/passport')(passport); //comment this back in later
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded(false));
-app.engine('html', require('ejs').__express);
-app.set('view engine', 'html');
+app.set('view engine', 'ejs');
 
 
 app.use(session({ secret: 'helloWorldMyNameIsEd'}));
@@ -46,8 +46,6 @@ app.use(flash()); // flash messages- will we need this??
 //   return 'iamasecret' + uuid.v4(); // not sure how this'll work.
 // };
 // // generateSessionSecret()
-
-
 /* Routers */
 
 app.get('/', function (req, res) {
@@ -57,10 +55,14 @@ app.get('/', function (req, res) {
   //       process.exit();
   //   } else {throw err;}
   // });
-  res.render('index');
+  if (req.isAuthenticated()) {
+    res.redirect('/dashboard');
+  }
+  res.render('index.ejs');
 });
 
 require('./routes/sessions')(app, passport);
+app.use('/', users);
 
 
 app.listen(port, function () {

@@ -13,32 +13,6 @@ module.exports = function (passport) {
     });
   });
 
-  passport.use('local-signup', new LocalStrategy({
-    usernameField: 'email',
-    passwordField: 'password',
-    passReqToCallback: true
-  }, function (req, email, password, done) {
-    process.nextTick(function () {
-      User.findOne({'email': email}, function (err, user) {
-        if (err) {
-          console.log('There was an error in local-signup');
-          return done(err);
-        } else {
-          var newUser = new User();
-          newUser.email = email
-          newUser.password = newUser.generateHash(password);
-          newUser.save(function (err) {
-            if (err) {
-              throw err;
-            }
-            console.log('created user');
-            return done(null, newUser);
-          });
-        }
-      });
-    });
-  }));
-
   passport.use('local-login', new LocalStrategy({
     usernameField: 'email',
     passwordField: 'password',

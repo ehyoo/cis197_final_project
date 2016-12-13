@@ -1,32 +1,37 @@
 var User = require('../models/user');
 
 module.exports = function (app, passport) {
-  app.get('/signup', function (req, res) {
+
+  var isNotLoggedIn = function (req, res, next) {
+    if (!req.isAuthenticated()) {
+      return next();
+    }
+    console.log("That's not a valid move");
+    res.redirect('/');
+  }
+
+  app.get('/signup', isNotLoggedIn, function (req, res) {
     res.render('signup');
   });
 
-  app.post('/signup', passport.authenticate('local-signup', {
-    successRedirect: '/',
-    failureRedirect: '/signup',
-    failureFlash: true
-  }));
-
-
-// function (req, res) {
-//     var unhashedPassword = req.body.password;
-//     var user = new User();
-//     user.email = req.body.email;
-//     user.password = user.generateHash(req.body.password);
-//     user.firstName = req.body.firstName;
-//     user.lastName = req.body.lastName;
-//     user.save(function (err, usr) {
-//       if (err) {
-//         throw err;
-//       } else {
-//         res.redirect('/'); // then maybe do the session thing?
-//       }
-//     });
-  // });
+  app.post('/signup', isNotLoggedIn, function (req, res) {
+    var unhashedPassword = req.body.password;
+    var user = new User();
+    user.email = req.body.email;
+    user.password = user.generateHash(req.body.password);
+    user.firstName = req.body.firstName;
+    user.lastName = req.body.lastName;
+    user.isVerified = false;
+    user.save(function (err, usr) {
+      if (err) {
+        throw err;
+      } else {
+        console.log('new user created');
+        console.log(user);
+        res.redirect('/'); // then maybe do the session thing?
+      }
+    });
+  });
 
   var meme = function (err, req, res) {
     if (err) {
@@ -40,11 +45,11 @@ module.exports = function (app, passport) {
     next();
   }
 
-  app.get('/login', function (req, res) {
+  app.get('/login', isNotLoggedIn, function (req, res) {
     res.render('login');
   });
 
-  app.post('/login', 
+  app.post('/login', isNotLoggedIn,
     passport.authenticate('local-login', {successRedirect: '/',
                                           failureRedirect: '/login',
                                           failureFlash: true
@@ -55,11 +60,4 @@ module.exports = function (app, passport) {
     req.logout();
     res.redirect('/')
   });
-
-  var isLoggedIn = function (req, res, next) {
-    if (req.isAuthenticated()) {
-      return next();
-    }
-    res.redirect('/')
-  }
 }
