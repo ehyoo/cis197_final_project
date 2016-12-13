@@ -1,4 +1,6 @@
 var User = require('../models/user');
+var accessTokens = require('../config/accessTokens.js');
+var SCOPES = 
 
 module.exports = function (app, passport) {
 
@@ -33,18 +35,6 @@ module.exports = function (app, passport) {
     });
   });
 
-  var meme = function (err, req, res) {
-    if (err) {
-      console.log('there was an error');
-    }
-    console.log("this hits");
-  }
-
-  var initCallback = function (req, res, next) {
-    console.log("init callback");
-    next();
-  }
-
   app.get('/login', isNotLoggedIn, function (req, res) {
     res.render('login');
   });
@@ -60,4 +50,13 @@ module.exports = function (app, passport) {
     req.logout();
     res.redirect('/')
   });
+
+  app.get('/auth/google', passport.authenticate('google', {
+    scope: ['profile', 'email', 'https://www.googleapis.com/auth/calendar']
+  }));
+
+  app.get('/auth/google/callback', passport.authenticate('google', {
+    successRedirect: '/event',
+    failureRedirect: '/dashboard'
+  }));
 }

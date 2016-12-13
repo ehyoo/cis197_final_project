@@ -36,20 +36,18 @@ router.post('/createEvent', function (req, res) {
       timeStart: pseudoStart, // TODO: be sure to change this to the actual time.
       timeEnd: endDate 
     });
-    
-    scheduleEvent(newEvent);
-
+    scheduleEvent(newEvent); // TODO: handle lazily to allow deletion?
     newEvent.save(function (err, evnt) {
       if (err) {
         throw err;
       } else {
         console.log('new event created');
         console.log(evnt);
-        res.redirect('/dashboard'); // then maybe do the session thing?
+        res.redirect('/dashboard');
       }
     });
   } else {
-    // throw error???
+    res.redirect('/');
   }
 });
 

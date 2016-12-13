@@ -10,6 +10,12 @@ var userSchema = new Schema({
   password: String,
   isVerified: Boolean,
   officerPosition: String,
+  google: {
+    id: String,
+    token: String,
+    name: String,
+    email: String
+  }
 });
 
 userSchema.methods.generateHash = function(password) {

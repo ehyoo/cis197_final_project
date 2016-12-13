@@ -1,3 +1,8 @@
 Welcome to your dashboard, <%= user.firstName %> !</br>
 <a href="/event">Create an Event!</a></br>
-<a href="/logout">Logout</a></br>
+<a href="/logout">Logout</a></br><br>
+<% if (user.google.id) { %>
+  Google account linked with <%= user.google.email %> 
+<% } else { %>
+  <a href="/auth/google">Add Google Access!</a>
+<% } %>
