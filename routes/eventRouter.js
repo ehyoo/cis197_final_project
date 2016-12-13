@@ -1,5 +1,6 @@
 var express = require('express');
 var Event = require('../models/event.js');
+
 var router = express.Router();
 
 router.get('/event', function (req, res) {
@@ -12,16 +13,20 @@ router.get('/event', function (req, res) {
 
 router.post('/createEvent', function (req, res) {
   if (req.isAuthenticated()) {
-    var startDate = new Date(createDateString(req.body.startYear,
-      req.body.startMonth,
-      req.body.startDay,
-      req.body.startHour,
-      req.body.startMinute));
-    var endDate = new Date(createDateString(req.body.endYear,
-      req.body.endMonth,
-      req.body.endDay,
-      req.body.endHour,
-      req.body.endMinute));
+    var startDate = new Date(parseInt(req.body.startYear),
+      parseInt(req.body.startMonth) - 1,
+      parseInt(req.body.startDay),
+      parseInt(req.body.startHour),
+      parseInt(req.body.startMinute));
+
+    console.log(parseInt(req.body.startYear));
+
+    var endDate = new Date(parseInt(req.body.endYear),
+      parseInt(req.body.endMonth),
+      parseInt(req.body.endDay),
+      parseInt(req.body.endHour),
+      parseInt(req.body.endMinute));
+
     var newEvent = new Event({
       creator: req.user,
       title: req.body.title,
@@ -30,6 +35,14 @@ router.post('/createEvent', function (req, res) {
       timeStart: startDate,
       timeEnd: endDate 
     });
+
+    var schedule = require('node-schedule');
+    var asdf = newEvent.timeStart;
+    console.log("Job scheduled.");
+    schedule.scheduleJob(asdf, function() {
+      console.log("ayy lmao");
+    });
+
     newEvent.save(function (err, evnt) {
       if (err) {
         throw err;
@@ -38,7 +51,13 @@ router.post('/createEvent', function (req, res) {
         console.log(evnt);
         res.redirect('/dashboard'); // then maybe do the session thing?
       }
-    }); 
+    });
+
+
+
+
+
+    // we'll put this here for now- we'll make this more robust later.
   } else {
     // throw error???
   }
