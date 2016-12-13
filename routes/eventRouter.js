@@ -87,18 +87,15 @@ var postEventOnCalendar = function (event, req) {
     console.log('no token');
     return;
   }
-
   var oauth2Client = new OAuth2(
     accessTokens.googleClientId.web.client_id,
     accessTokens.googleClientId.web.client_secret,
     accessTokens.googleClientId.web.redirect_uris[0]);
-
   oauth2Client.setCredentials({'access_token': req.user.google.token});
-
   var calendar = google.calendar('v3');
   calendar.events.insert({
     auth: oauth2Client, // user's token
-    calendarId: 'primary',
+    calendarId: accessTokens.lxaCalendarId,
     resource: event,
   }, function(err, event) {
     if (err) {
