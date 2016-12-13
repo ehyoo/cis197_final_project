@@ -13,6 +13,7 @@ var userSchema = new Schema({
   google: {
     id: String,
     token: String,
+    refreshToken: String,
     name: String,
     email: String
   }

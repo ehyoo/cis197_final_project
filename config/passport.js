@@ -1,5 +1,6 @@
 var LocalStrategy = require('passport-local').Strategy;
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var refresh = require('passport-oauth2-refresh');
 var accessTokens = require('./accessTokens.js');
 var User = require('../models/user');
 
@@ -36,8 +37,7 @@ module.exports = function (passport) {
       return done(null, user);
     });
   }));
-
-  passport.use(new GoogleStrategy({
+  var googleStrategy = new GoogleStrategy({
     clientID: accessTokens.googleClientId.web.client_id,
     clientSecret: accessTokens.googleClientId.web.client_secret,
     callbackURL: 'http://localhost:3000/auth/google/callback', //interesting
@@ -54,6 +54,7 @@ module.exports = function (passport) {
               'google': {
                 'id': profile.id,
                 'token': token,
+                'refreshToken': refreshToken,
                 'name': profile.displayName,
                 'email': profile.emails[0].value
               }
@@ -72,5 +73,8 @@ module.exports = function (passport) {
         }
       }
     );
-  }));
+  });
+
+  passport.use(googleStrategy);
+  refresh.use(googleStrategy);
 };
