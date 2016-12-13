@@ -4,6 +4,7 @@ var app          = express();
 var port         = process.env.port || 3000;
 var mongoose     = require('mongoose');
 var users = require('./routes/userRouter.js');
+var events = require('./routes/eventRouter.js');
 /* Sessions Setup */
 var passport     = require('passport');
 var flash        = require('connect-flash');
@@ -35,19 +36,16 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded(false));
 app.set('view engine', 'ejs');
 
+var generateSessionSecret = function () {
+  return 'iamasecret' + uuid.v4(); // not sure how this'll work.
+};
 
-app.use(session({ secret: 'helloWorldMyNameIsEd'}));
+app.use(session({ secret: generateSessionSecret()}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash()); // flash messages- will we need this??
 
-
-// var generateSessionSecret = function () {
-//   return 'iamasecret' + uuid.v4(); // not sure how this'll work.
-// };
-// // generateSessionSecret()
 /* Routers */
-
 app.get('/', function (req, res) {
   // User.find({}, function(err, docs) {
   //   if (!err){ 
@@ -63,6 +61,7 @@ app.get('/', function (req, res) {
 
 require('./routes/sessions')(app, passport);
 app.use('/', users);
+app.use('/', events);
 
 
 app.listen(port, function () {
