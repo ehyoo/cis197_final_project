@@ -12,7 +12,6 @@ router.get('/dashboard', function (req, res) {
         res.render('dashboard.ejs', {user: req.user, events: evts});
       }
     });
-    
   } else {
     res.redirect('/'); //maybe flash something here?
   }

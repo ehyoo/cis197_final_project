@@ -12,30 +12,30 @@ module.exports = function (app, passport) {
     res.redirect('/');
   }
 
-  var refreshToken = function(req, res) {
-    if (req.user) {
-      if (req.user.google.refreshToken) {
-        refresh.requestNewAccessToken('google', req.user.google.refreshToken, function(err, accessToken, refreshToken) {
-          console.log('attempting to refresh the token');
-          var googleAuthObject = {
-            'google': {
-              'token': accessToken,
-              'refreshToken': refreshToken,
-            }
-          }
-          User.findOneAndUpdate({'email': req.user.email}, googleAuthObject, null, function(err, usr) {
-            if (err) {
-              console.log('error with updating the user');
-              return;
-            }
-            console.log('user was successfully updated with google tokens');
-          });
-        });
-      } else {
-        console.log('No refresh token available');
-      }
-    }
-  }
+  // var refreshToken = function(req, res) {
+  //   if (req.user) {
+  //     if (req.user.google.refreshToken) {
+  //       refresh.requestNewAccessToken('google', req.user.google.refreshToken, function(err, accessToken, refreshToken) {
+  //         console.log('attempting to refresh the token');
+  //         var googleAuthObject = {
+  //           'google': {
+  //             'token': accessToken,
+  //             'refreshToken': refreshToken,
+  //           }
+  //         }
+  //         User.findOneAndUpdate({'email': req.user.email}, googleAuthObject, null, function(err, usr) {
+  //           if (err) {
+  //             console.log('error with updating the user');
+  //             return;
+  //           }
+  //           console.log('user was successfully updated with google tokens');
+  //         });
+  //       });
+  //     } else {
+  //       console.log('No refresh token available');
+  //     }
+  //   }
+  // }
 
   app.get('/signup', isNotLoggedIn, function (req, res) {
     res.render('signup');
@@ -51,7 +51,8 @@ module.exports = function (app, passport) {
     user.isVerified = false;
     user.save(function (err, usr) {
       if (err) {
-        throw err;
+        console.log('User could not be saved- are you filling out the correct information?');
+        res.redirect('/signup');
       } else {
         console.log('new user created');
         console.log(user);
@@ -76,7 +77,6 @@ module.exports = function (app, passport) {
           if (err) {
             return next(err);
           }
-          refreshToken(req, res);
           return res.redirect('/dashboard');
         });
       })(req, res, next);

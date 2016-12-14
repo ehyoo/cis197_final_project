@@ -42,15 +42,17 @@ router.post('/createEvent', function (req, res) {
       timeStart: startDate, // TODO: be sure to change this to the actual time.
       timeEnd: endDate //endDate 
     });
-    postEventOnCalendar(createGoogleEvent(newEvent), req);
-    scheduleEvent(newEvent); // TODO: handle lazily to allow deletion?
+
     newEvent.save(function (err, evnt) {
       if (err) {
-        throw err;
+        console.log('The event was not valid- please try again');
+        res.redirect('/event');
       } else {
         console.log('new event created=======');
         console.log(evnt);
         console.log('=======');
+        postEventOnCalendar(createGoogleEvent(newEvent), req);
+        scheduleEvent(newEvent); // TODO: handle lazily to allow deletion?
         res.redirect('/dashboard');
       }
     });
