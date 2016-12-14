@@ -35,6 +35,7 @@ app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded(false));
 app.set('view engine', 'ejs');
+app.use(express.static(__dirname + '/public'));
 
 var generateSessionSecret = function () {
   return 'iamasecret' + uuid.v4();

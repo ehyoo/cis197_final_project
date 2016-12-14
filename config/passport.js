@@ -42,7 +42,7 @@ module.exports = function (passport) {
     clientSecret: accessTokens.googleClientId.web.client_secret,
     callbackURL: 'http://localhost:3000/auth/google/callback', //interesting
     passReqToCallback: true
-  }, function (req, token, refreshToken, profile, done) { //tbh i'm not too sure about this request thing.
+  }, function (req, token, refreshToken, profile, done) {
     process.nextTick( 
       function() {
         if (req.user) {
@@ -76,5 +76,4 @@ module.exports = function (passport) {
   });
 
   passport.use(googleStrategy);
-  refresh.use(googleStrategy);
 };

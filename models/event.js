@@ -23,6 +23,10 @@ var eventSchema = new Schema({
     type: Date,
     required: true
   },
+  completed: {
+    type: Boolean,
+    required: true
+  }
 });
 
 // eventSchema.pre('save', true, function(next, done) {
@@ -33,6 +37,26 @@ var eventSchema = new Schema({
 //     done();
 //   }
 // });
+
+eventSchema.methods.markAsComplete = function() {
+  this.completed = true;
+  this.save(function (err) {
+    if (err) {
+      console.log('something went wrong with updating the object');
+      return err;
+    }
+    console.log('Update complete!');
+  });
+}
+
+eventSchema.statics.getCompleted = function(cb) {
+  return this.find({completed: true}, cb);
+}
+
+eventSchema.statics.getPending = function(cb) {
+  return this.find({completed: false}, cb);
+}
+
 
 var Event = mongoose.model('Event', eventSchema);
 module.exports = Event;

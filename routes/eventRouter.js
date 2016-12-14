@@ -2,11 +2,10 @@ var express = require('express');
 var Event = require('../models/event.js');
 var schedule = require('node-schedule');
 var botHelper = require('../config/botHelper.js');
-
 var google = require('googleapis');
 var OAuth2 = google.auth.OAuth2;
-
 var accessTokens = require('../config/accessTokens.js');
+
 var router = express.Router();
 
 router.get('/event', function (req, res) {
@@ -31,8 +30,8 @@ router.post('/createEvent', function (req, res) {
       parseInt(req.body.endHour),
       parseInt(req.body.endMinute));
 
-    startDate = new Date(Date.now() + 4000);
-    endDate = new Date(Date.now() + 1000000);
+    // startDate = new Date(Date.now() + 4000);
+    // endDate = new Date(Date.now() + 1000000);
 
     var newEvent = new Event({
       creator: req.user,
@@ -40,7 +39,8 @@ router.post('/createEvent', function (req, res) {
       description: req.body.description,
       location: req.body.location,
       timeStart: startDate,
-      timeEnd: endDate //endDate 
+      timeEnd: endDate, //endDate
+      completed: false
     });
 
     newEvent.save(function (err, evnt) {
@@ -65,9 +65,10 @@ var scheduleEvent = function (event) {
   schedule.scheduleJob(event.timeStart, function() {
     console.log('calling message...');
     botHelper(event);
+    console.log('finished the message, marking as complete.');
+    event.markAsComplete();
   });
 };
-
 
 var createGoogleEvent = function(event) {
   console.log(event.timeStart.toISOString());

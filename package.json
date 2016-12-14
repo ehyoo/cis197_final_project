@@ -29,7 +29,8 @@
     "passport-google-oauth": "latest",
     "passport-local": "~0.1.6",
     "passport-oauth2-refresh": "^1.0.0",
-    "request": "latest"
+    "request": "latest",
+    "jquery": "latest"
   },
   "devDependencies": {
     "chai": "^3.2.0",

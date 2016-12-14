@@ -2,8 +2,7 @@
 <head>
   <title>ReminderBot App</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 </head>
 <body>
 
@@ -15,7 +14,8 @@ Welcome to your dashboard, <%= user.firstName %>!</br>
   <a href="/auth/google">Add Google Access!</a>
 <% } %>
 
-<table class="table table-hover">
+<table class="table">
+  <h4>Events Pending</h4>
   <thead>
     <tr>
       <th>Creator</th>
@@ -25,15 +25,38 @@ Welcome to your dashboard, <%= user.firstName %>!</br>
     </tr>
   </thead>
   <tbody>
-  <% for (var i = 0; i < events.length; i++) { %>
+  <% for (var i = 0; i < pEvents.length; i++) { %>
     <tr>
-      <td><%=events[i].creator.firstName%> <%= events[i].creator.lastName%></td>
-      <td><%=events[i].title%></td>
-      <td><%=events[i].timeStart%></td>
-      <td><%=events[i].timeEnd%></td>
+      <% console.log(pEvents[i].completed)%>
+      <td><%=pEvents[i].creator.firstName%> <%= pEvents[i].creator.lastName%></td>
+      <td><%=pEvents[i].title%></td>
+      <td><%=pEvents[i].timeStart%></td>
+      <td><%=pEvents[i].timeEnd%></td>
   <% } %>
   </tbody>
 </table>
+
+<table class="table">
+  <h4>Events Sent out</h4>
+  <thead>
+    <tr>
+      <th>Creator</th>
+      <th>Event Title</th>
+      <th>Start Time</th>
+      <th>End Time</th>
+    </tr>
+  </thead>
+  <tbody>
+  <% for (var i = 0; i < cEvents.length; i++) { %>
+    <tr>
+      <td><%=cEvents[i].creator.firstName%> <%= cEvents[i].creator.lastName%></td>
+      <td><%=cEvents[i].title%></td>
+      <td><%=cEvents[i].timeStart%></td>
+      <td><%=cEvents[i].timeEnd%></td>
+  <% } %>
+  </tbody>
+</table>
+
 <a href="/event" class="btn btn-primary">Create an Event!</a></br>
 </body>
 </html>
