@@ -39,7 +39,7 @@ router.post('/createEvent', function (req, res) {
       title: req.body.title,
       description: req.body.description,
       location: req.body.location,
-      timeStart: startDate, // TODO: be sure to change this to the actual time.
+      timeStart: startDate,
       timeEnd: endDate //endDate 
     });
 
@@ -67,6 +67,7 @@ var scheduleEvent = function (event) {
     botHelper(event);
   });
 };
+
 
 var createGoogleEvent = function(event) {
   console.log(event.timeStart.toISOString());

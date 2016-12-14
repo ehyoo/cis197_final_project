@@ -67,7 +67,6 @@ module.exports = function (app, passport) {
             if (err) {
               return err;
             }
-
             User.findOneAndUpdate({email: user.email}, {'google.token': tokens.access_token}, 
               function (err, ur) {
                 if (err) {
