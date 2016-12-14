@@ -1,4 +1,12 @@
-Create a new event!
+<html>
+<head>
+  <title>ReminderBot App</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<h2>Create a new event!</h2>
 <form action="/createEvent" method="post">
   <p>Title<br>
   <input type="text" name="title"></p>
@@ -8,31 +16,35 @@ Create a new event!
   <input type="text" name="location"></p>
 
   <div>
-    <h2> Start Date </h2>
-    <p>Month<br>
-    <input type="text" name="startMonth"></p>
-    <p>Day<br>
-    <input type="text" name="startDay"></p>
-    <p>Year<br>
-    <input type="text" name="startYear"></p>
-    <p>Hour<br>
-    <input type="text" name="startHour"></p>
-    <p>Minute<br>
-    <input type="text" name="startMinute"></p>
+    <h3> Start Date </h3>
+    <p>Month
+    <input type="text" name="startMonth">
+    Day
+    <input type="text" name="startDay">
+    Year
+    <input type="text" name="startYear">
+    Hour
+    <input type="text" name="startHour">
+    Minute
+    <input type="text" name="startMinute">
   <div>
 
   <div>
-    <h2> End Date </h2>
-    <p>Month<br>
-    <input type="text" name="endMonth"></p>
-    <p>Day<br>
-    <input type="text" name="endDay"></p>
-    <p>Year<br>
-    <input type="text" name="endYear"></p>
-    <p>Hour<br>
-    <input type="text" name="endHour"></p>
-    <p>Minute<br>
-    <input type="text" name="endMinute"></p>
+    <h3> End Date </h3>
+    <p>Month
+    <input type="text" name="endMonth">
+    Day
+    <input type="text" name="endDay">
+    Year
+    <input type="text" name="endYear">
+    Hour
+    <input type="text" name="endHour">
+    Minute
+    <input type="text" name="endMinute">
+    </p>
   <div>
-  <p><button type="submit">Create Event!</button></p>
+  <p><button type="submit" class="btn btn-primary">Create Event!</button></p>
 </form>
+</body>
+</html>
+
