@@ -25,15 +25,14 @@ var eventSchema = new Schema({
   },
 });
 
-eventSchema.pre('save', true, function(next, done) {
-  if (this.timeStart > this.timeEnd) {
-    next(new Error("Start time can't be after end time"));
-  } else {
-    console.log("it's valid. calling next...");
-    done();
-  }
-});
-
+// eventSchema.pre('save', true, function(next, done) {
+//   if (this.timeStart > this.timeEnd) {
+//     next(new Error("Start time can't be after end time"));
+//   } else {
+//     console.log("it's valid. calling next...");
+//     done();
+//   }
+// });
 
 var Event = mongoose.model('Event', eventSchema);
 module.exports = Event;

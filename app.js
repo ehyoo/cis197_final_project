@@ -50,6 +50,7 @@ app.get('/', function (req, res) {
   if (req.isAuthenticated()) {
     res.redirect('/dashboard');
   }
+  console.log(req.user);
   res.render('index.ejs');
 });
 

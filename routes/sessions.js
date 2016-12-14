@@ -1,6 +1,11 @@
 var User = require('../models/user');
 var accessTokens = require('../config/accessTokens.js');
-var refresh = require('passport-oauth2-refresh');
+var google = require('googleapis');
+var OAuth2 = google.auth.OAuth2;
+var oauth2Client = new OAuth2(
+  accessTokens.googleClientId.web.client_id,
+  accessTokens.googleClientId.web.client_secret,
+  accessTokens.googleClientId.web.redirect_uris[0]);
 
 module.exports = function (app, passport) {
 
@@ -11,31 +16,6 @@ module.exports = function (app, passport) {
     console.log("That's not a valid move");
     res.redirect('/');
   }
-
-  // var refreshToken = function(req, res) {
-  //   if (req.user) {
-  //     if (req.user.google.refreshToken) {
-  //       refresh.requestNewAccessToken('google', req.user.google.refreshToken, function(err, accessToken, refreshToken) {
-  //         console.log('attempting to refresh the token');
-  //         var googleAuthObject = {
-  //           'google': {
-  //             'token': accessToken,
-  //             'refreshToken': refreshToken,
-  //           }
-  //         }
-  //         User.findOneAndUpdate({'email': req.user.email}, googleAuthObject, null, function(err, usr) {
-  //           if (err) {
-  //             console.log('error with updating the user');
-  //             return;
-  //           }
-  //           console.log('user was successfully updated with google tokens');
-  //         });
-  //       });
-  //     } else {
-  //       console.log('No refresh token available');
-  //     }
-  //   }
-  // }
 
   app.get('/signup', isNotLoggedIn, function (req, res) {
     res.render('signup');
@@ -77,6 +57,25 @@ module.exports = function (app, passport) {
           if (err) {
             return next(err);
           }
+          // do the refresh here.
+          oauth2Client.setCredentials(
+            {'access_token': user.google.token,
+            'refresh_token': user.google.refreshToken});
+          console.log(user);
+          console.log(oauth2Client);
+          oauth2Client.refreshAccessToken(function(err, tokens) {
+            if (err) {
+              return err;
+            }
+
+            User.findOneAndUpdate({email: user.email}, {'google.token': tokens.access_token}, 
+              function (err, ur) {
+                if (err) {
+                  return err;
+                }
+              });
+          });
+
           return res.redirect('/dashboard');
         });
       })(req, res, next);
@@ -88,10 +87,13 @@ module.exports = function (app, passport) {
     res.redirect('/')
   });
 
-  app.get('/auth/google', passport.authenticate('google', {
-    scope: ['profile', 'email', 'https://www.googleapis.com/auth/calendar'],
-    accessType: 'offline' 
-  }));
+  app.get('/auth/google', 
+    passport.authenticate('google', { scope: ['profile', 
+      'email', 
+      'https://www.googleapis.com/auth/calendar'],
+    accessType: 'offline', approvalPrompt: 'force'}
+    )
+  );
 
   app.get('/auth/google/callback', passport.authenticate('google', {
     successRedirect: '/event',

@@ -31,8 +31,8 @@ router.post('/createEvent', function (req, res) {
       parseInt(req.body.endHour),
       parseInt(req.body.endMinute));
 
-    // startDate = new Date(Date.now() + 4000);
-    // endDate = new Date(Date.now() + 1000000);
+    startDate = new Date(Date.now() + 4000);
+    endDate = new Date(Date.now() + 1000000);
 
     var newEvent = new Event({
       creator: req.user,
@@ -101,7 +101,7 @@ var postEventOnCalendar = function (event, req) {
   var calendar = google.calendar('v3');
   calendar.events.insert({
     auth: oauth2Client, // user's token
-    calendarId: accessTokens.lxaCalendarId,
+    calendarId: 'primary', //accessTokens.lxaCalendarId,
     resource: event,
   }, function(err, event) {
     if (err) {
