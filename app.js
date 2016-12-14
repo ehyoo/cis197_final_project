@@ -29,7 +29,7 @@ mongoose.connect(configDB.url, function (err) {
   }
 });
 
-require('./config/passport')(passport); //comment this back in later
+require('./config/passport')(passport); 
 
 app.use(morgan('dev'));
 app.use(cookieParser());
@@ -37,7 +37,7 @@ app.use(bodyParser.urlencoded(false));
 app.set('view engine', 'ejs');
 
 var generateSessionSecret = function () {
-  return 'iamasecret' + uuid.v4(); // not sure how this'll work.
+  return 'iamasecret' + uuid.v4();
 };
 
 app.use(session({ secret: generateSessionSecret()}));
@@ -47,12 +47,6 @@ app.use(flash()); // flash messages- will we need this??
 
 /* Routers */
 app.get('/', function (req, res) {
-  // User.find({}, function(err, docs) {
-  //   if (!err){ 
-  //       console.log(docs);
-  //       process.exit();
-  //   } else {throw err;}
-  // });
   if (req.isAuthenticated()) {
     res.redirect('/dashboard');
   }

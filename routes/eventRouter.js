@@ -91,7 +91,10 @@ var postEventOnCalendar = function (event, req) {
     accessTokens.googleClientId.web.client_id,
     accessTokens.googleClientId.web.client_secret,
     accessTokens.googleClientId.web.redirect_uris[0]);
-  oauth2Client.setCredentials({'access_token': req.user.google.token});
+  oauth2Client.setCredentials(
+    {'access_token': req.user.google.token,
+    'refresh_token': req.user.google.refreshToken});
+  
   var calendar = google.calendar('v3');
   calendar.events.insert({
     auth: oauth2Client, // user's token
