@@ -31,16 +31,16 @@ router.post('/createEvent', function (req, res) {
       parseInt(req.body.endHour),
       parseInt(req.body.endMinute));
 
-    let pseudoStart = new Date(Date.now() + 4000);
-    let pseudoEnd = new Date(Date.now() + 1000000);
+    // startDate = new Date(Date.now() + 4000);
+    // endDate = new Date(Date.now() + 1000000);
 
     var newEvent = new Event({
       creator: req.user,
       title: req.body.title,
       description: req.body.description,
       location: req.body.location,
-      timeStart: pseudoStart, // TODO: be sure to change this to the actual time.
-      timeEnd: pseudoEnd //endDate 
+      timeStart: startDate, // TODO: be sure to change this to the actual time.
+      timeEnd: endDate //endDate 
     });
     postEventOnCalendar(createGoogleEvent(newEvent), req);
     scheduleEvent(newEvent); // TODO: handle lazily to allow deletion?
@@ -48,8 +48,9 @@ router.post('/createEvent', function (req, res) {
       if (err) {
         throw err;
       } else {
-        console.log('new event created');
+        console.log('new event created=======');
         console.log(evnt);
+        console.log('=======');
         res.redirect('/dashboard');
       }
     });

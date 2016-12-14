@@ -4,7 +4,7 @@ var Event = require('../models/event');
 
 router.get('/dashboard', function (req, res) {
   if (req.isAuthenticated()) {
-    Event.find({}, function(err, evts){
+    Event.find({}).populate('creator').exec(function(err, evts){
       if(err){
         console.log(err);
         res.render('dashboard.ejs', {user: req.user, events: null});

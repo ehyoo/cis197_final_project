@@ -9,14 +9,11 @@
 
 Welcome to your dashboard, <%= user.firstName %>!</br>
 <a href="/logout">Logout</a><br>
-<a href="/event" class="btn btn-primary">Create an Event!</a></br>
-
 <% if (user.google.id) { %>
   Google account linked with <%= user.google.email %> 
 <% } else { %>
   <a href="/auth/google">Add Google Access!</a>
 <% } %>
-
 
 <table class="table table-hover">
   <thead>
@@ -30,14 +27,14 @@ Welcome to your dashboard, <%= user.firstName %>!</br>
   <tbody>
   <% for (var i = 0; i < events.length; i++) { %>
     <tr>
-      <td><%=events[i].creator%></td>
+      <td><%=events[i].creator.firstName%> <%= events[i].creator.lastName%></td>
       <td><%=events[i].title%></td>
       <td><%=events[i].timeStart%></td>
       <td><%=events[i].timeEnd%></td>
   <% } %>
   </tbody>
 </table>
-
+<a href="/event" class="btn btn-primary">Create an Event!</a></br>
 </body>
 </html>
 
